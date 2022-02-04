@@ -1,14 +1,32 @@
 <template>
-    <section class='chat-bot'>
-      <div class='chat-bot-list-container' ref='chatbot'>
-          <ul class='chat-bot-list'>
-              <li class='message'
-                  v-for='(message, idx) of messages'
-                  :key='idx'
-                   :class='message.author'
-                   >
-                   <p>
-                       <span>{{ message.text}}</span>
+    
+      <div class=''>{{info}}
+        <p 
+        class="questions"></p>
+
+          <ul class='answers'>
+
+              <li          
+               class="answer"
+               v-for="(answer, idx) in answers"
+               :key="idx"
+               >
+                 
+                   <p class="value">
+                       {{}}
+                   </p>
+
+                   <p class="title">
+                      {{}}
+                   </p>
+
+              </li>
+              <li class='messages'>
+                   <p class="message-value">
+                       {{info.value}}
+                   </p>
+                   <p class="message-title">
+                      {{}}
                    </p>
 
               </li>
@@ -16,52 +34,34 @@
           </ul>
 
       </div>
-      <div class='chat-inputs'>
-
-          <input type="text" 
-          v-model='message'
-          @keyup.enter='sendMessage'
-          />
-              
-            <button @click="sendMessage">Send</button>
-
-      </div>
-
-  </section>
+     
+ 
 </template>
 
 <script>
+import axios from 'axios'
+
+
 export default {
   name: 'ChatBot',
-  data: () => ({
-    message: '',
-    messages: []
+  data: () => ({  
+  info: '',
+  info: [],
+  // value:'',
+  // questions: [],
+  answers: []
+    
   }),
-  methods: {
-    sendMessage() {
-      const message = this.message
-      
-      this.messages.push({
-        text: message,
-        author: 'client'
-        
-      })
-      this.message = ''
-      this.$axios.get(`https://618404bd91d76c00172d1d23.mockapi.io/api/chat`)
-       .then(res => res.json())
-       console.log(json)
-      .then(res => {
-        this.messages.push({
-          text: res.data.output,
-          author: 'server'
-        })
-        this.$nextTick(() => {
-          this.$refs.chatbot.scrollTop = this.$refs.chatbot.scrollHeight
-        })
-      })
-    }
-  }
+
+mounted() {
+  axios.get('https://618404bd91d76c00172d1d23.mockapi.io/api/chat')
+  .then(response => (this.info = response.data))
+
+  .catch(error => console.log(error))
+
+  } 
 }
+
 </script>
 
 <style>
